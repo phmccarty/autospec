@@ -151,7 +151,7 @@ def is_file_valid(path):
 
 
 def dump_symbols(path):
-    cmd = "nm --defined-only -g --dynamic \"{}\"".format(path)
+    cmd = "nm --defined-only -g --dynamic --with-symbol-versions \"{}\"".format(path)
     lines = None
 
     ret = set()
