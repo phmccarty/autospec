@@ -272,7 +272,7 @@ def parse_build_results(filename, returncode, filemanager):
 def reserve_path(path, count):
     """Try to pre-populate directory at path."""
     try:
-        subprocess.check_output(['sudo', 'mkdir', path], stderr=subprocess.STDOUT)
+        subprocess.check_output(['mkdir', path], stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as err:
         out = err.output.decode('utf-8')
         print(f'reserve_path ({count}) ({path}): {out}')
