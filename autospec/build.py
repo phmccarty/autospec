@@ -269,12 +269,13 @@ def parse_build_results(filename, returncode, filemanager):
             success = 1
 
 
-def reserve_path(path):
+def reserve_path(path, count):
     """Try to pre-populate directory at path."""
     try:
         subprocess.check_output(['sudo', 'mkdir', path], stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as err:
         out = err.output.decode('utf-8')
+        print(f'reserve_path ({count}) ({path}): {out}')
         return "File exists" not in out
 
     return True
@@ -284,16 +285,19 @@ def get_uniqueext(dirn, dist, name):
     """Find a unique name to create mock chroot without reusing an old one."""
     # Default to tarball name
     resultsdir = os.path.join(dirn, "{}-{}".format(dist, name))
-    if reserve_path(resultsdir):
+    count = 1
+    if reserve_path(resultsdir, count):
         return name
 
     # Find a unique extension by checking if it exists in /var/lib/mock
     # Increment the pathname until an unused path is found
     resultsdir += "-1"
     seq = 1
-    while not reserve_path(resultsdir):
+    count = count + 1
+    while not reserve_path(resultsdir, count):
         seq += 1
         resultsdir = resultsdir.replace("-{}".format(seq - 1), "-{}".format(seq))
+        count = count + 1
 
     return "{}-{}".format(name, seq)
 
