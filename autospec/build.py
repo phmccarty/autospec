@@ -191,7 +191,13 @@ def parse_buildroot_log(filename, returncode):
     for line in loglines:
         match = missing_pat.match(line)
         if match is not None:
-            util.print_fatal("Cannot resolve dependency name: {}".format(match.group(1)))
+            name = match.group(1)
+            util.print_fatal("Cannot resolve dependency name: {}".format(name))
+            # If the dependency name exists in the current buildreq cache, but
+            # not in the buildreqs set, retry the build after uncaching it.
+            if name in buildreq.buildreqs_cache and name not in buildreq.buildreqs:
+                must_restart = 1
+            buildreq.remove_cached_buildreq(name)
             is_clean = False
 
     return is_clean
