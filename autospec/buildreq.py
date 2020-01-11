@@ -77,6 +77,26 @@ def add_buildreq(req, cache=False):
     return new
 
 
+def remove_buildreq(req):
+    """Remove req from the global buildreqs set."""
+    global buildreqs
+    req = req.strip()
+    try:
+        buildreqs.remove(req)
+    except KeyError:
+        pass
+
+
+def remove_cached_buildreq(req):
+    """Remove req from the cached buildreqs set."""
+    global buildreqs_cache
+    req = req.strip()
+    try:
+        buildreqs_cache.remove(req)
+    except KeyError:
+        pass
+
+
 def add_requires(req, override=False):
     """Add req to the global requires set if it is present in buildreqs and os_packages and is not banned."""
     global buildreqs
@@ -116,6 +136,16 @@ def add_requires(req, override=False):
         # print("Adding requirement:", req)
         requires.add(req)
     return new
+
+
+def remove_requires(req):
+    """Remove req from the global requires set."""
+    global requires
+    req = req.strip()
+    try:
+        requires.remove(req)
+    except KeyError:
+        pass
 
 
 def add_pkgconfig_buildreq(preq, cache=False):
